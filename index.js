@@ -84,6 +84,7 @@ ibc.prototype.load = function(options, cb){
 				    ibc.prototype.register(i, user.username, user.secret);
 
 				})
+				a_cb();
 			}
 			else a_cb();
 		}, function(err, data){
