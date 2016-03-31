@@ -80,7 +80,10 @@ ibc.prototype.load = function(options, cb){
 		async.each(arr, function(i, a_cb) {
 			if(options.network.users[i]){											//make sure we still have a user for this network
 				console.log("[ibc-js] Registering user: ", options.network.users[i].username);
-				ibc.prototype.register(i, options.network.users[i].username, options.network.users[i].secret, a_cb);
+				options.network.users.forEach(function(user, idx, arr){
+				    ibc.prototype.register(i, user.username, user.secret);
+
+				})
 			}
 			else a_cb();
 		}, function(err, data){
@@ -731,7 +734,7 @@ function filter_users(users){
 	var valid_users = [];
 	for(var i = 0; i < users.length; i++) {
 
-		if(users[i].usertype == 1){		//type should be 1 for client
+		if(users[i].usertype == 1 || users[i].usertype == 2 || users[i].usertype == 3){		//type should be 1 for client
 			valid_users.push(users[i]);
 		}
 	}
