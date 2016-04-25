@@ -86,9 +86,8 @@ ibc.prototype.load = function(options, cb){
 
 				})
 			}
-		}, function(err, data){
-			load_cc();
 		});
+		load_cc();
 	}
 	else{
 		load_cc();
