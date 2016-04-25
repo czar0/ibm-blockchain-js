@@ -78,7 +78,7 @@ ibc.prototype.load = function(options, cb){
 		for(var i in chaincode.details.peers){
 			arr.push(i);															//build the list of indexes
 		}
-		forEach(arr, function(i, a_cb) {
+		arr.forEach(function(i, a_cb) {
 			if(options.network.users[i]){											//make sure we still have a user for this network
 				console.log("[ibc-js] Registering user: ", options.network.users[i].username);
 				options.network.users.forEach(function(user, idx, arr){
