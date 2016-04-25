@@ -20,6 +20,7 @@ var http = require('http');
 var async = require('async');
 var rest = require(__dirname + "/lib/rest");
 var AdmZip = require('adm-zip');
+var chaincode_dir = path.join(__dirname,'../../chaincode');
 
 var chaincode = {
 					read: null,
@@ -130,8 +131,6 @@ ibc.prototype.load_chaincode = function(options, cb) {
 	chaincode.details.unzip_dir = options.unzip_dir;
 	chaincode.details.git_url = options.git_url;
 
-	var chaincode_dir = path.join(__dirname,'../../chaincode');
-
 	console.log("zip_dest: "+zip_dest);
 	console.log("unzip_dest: "+unzip_dest);
 	console.log("unzip_cc_dest: "+unzip_cc_dest);
@@ -159,7 +158,7 @@ ibc.prototype.load_chaincode = function(options, cb) {
 			}
 			else{
 				console.log('[ibc-js] Found chaincode in local file system');
-				fs.readdir(unzip_cc_dest, cb_got_names);								//yeppers, go use it
+				fs.readdir(chaincode_dir, cb_got_names);								//yeppers, go use it
 			}
 		}
 	}
@@ -216,7 +215,7 @@ ibc.prototype.load_chaincode = function(options, cb) {
 				if(obj[i].indexOf('.go') >= 0){										//look for GoLang files
 					if(keep_looking){
 						foundGo = true;
-						fs.readFile(path.join(unzip_cc_dest, obj[i]), 'utf8', cb_read_go_file);
+						fs.readFile(path.join(chaincode_dir, obj[i]), 'utf8', cb_read_go_file);
 					}
 				}
 			}
@@ -469,7 +468,7 @@ function read(name, cb, lvl){										//lvl is for reading past state blocks, t
 						secureContext: chaincode.details.peers[ibc.selectedPeer].user
 					}
 				};
-	//console.log('body', body);
+	console.log('body', body);
 	options.success = function(statusCode, data){
 		console.log("[ibc-js] Read - success:", data);
 		if(cb) cb(null, data.OK);
