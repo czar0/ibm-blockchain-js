@@ -130,12 +130,15 @@ ibc.prototype.load_chaincode = function(options, cb) {
 	chaincode.details.unzip_dir = options.unzip_dir;
 	chaincode.details.git_url = options.git_url;
 
+	var chaincode_dir = path.normalize('../../chaincode/');
+
 	console.log("zip_dest: "+zip_dest);
 	console.log("unzip_dest: "+unzip_dest);
 	console.log("unzip_cc_dest: "+unzip_cc_dest);
 	console.log("chaincode.details.zip_url: "+chaincode.details.zip_url);
 	console.log("chaincode.details.unzip_dir: "+chaincode.details.unzip_dir);
 	console.log("chaincode.details.git_url: "+chaincode.details.git_url);
+	console.log("chaincode_dir: "+chaincode_dir);
 
 	if(!options.deployed_name || options.deployed_name == ''){							//lets clear and re-download
 		ibc.prototype.clear(cb_ready);
@@ -147,9 +150,9 @@ ibc.prototype.load_chaincode = function(options, cb) {
 	
 	// check if we already have the chaincode in the local filesystem, else download it
 	function cb_ready(){
-		try{fs.mkdirSync(tempDirectory);}
-		catch(e){ }
-		fs.access(unzip_cc_dest, cb_file_exists);										//check if files exist yet
+		// try{fs.mkdirSync(tempDirectory);}
+		// catch(e){ }
+		fs.access(chaincode_dir, cb_file_exists);										//check if files exist yet
 		function cb_file_exists(e){
 			if(e != null){
 				download_it(options.zip_url);											//nope, go download it
