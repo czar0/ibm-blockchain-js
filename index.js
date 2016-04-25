@@ -130,7 +130,7 @@ ibc.prototype.load_chaincode = function(options, cb) {
 	chaincode.details.unzip_dir = options.unzip_dir;
 	chaincode.details.git_url = options.git_url;
 
-	var chaincode_dir = path.normalize('../../chaincode/');
+	var chaincode_dir = path.join(__dirname,'../../chaincode');
 
 	console.log("zip_dest: "+zip_dest);
 	console.log("unzip_dest: "+unzip_dest);
