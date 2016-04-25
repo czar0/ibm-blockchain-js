@@ -625,7 +625,7 @@ function deploy(func, args, save_path, cb){
 							"function": func,
 							"args": args
 					},
-					secureContext: chaincode.details.peers[ibc.selectedPeer].user
+					secureContext: "user_type0_d09e5deaf8"
 				};
 	console.log('!body', body);
 	options.success = function(statusCode, data){
