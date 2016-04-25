@@ -72,7 +72,7 @@ ibc.prototype.load = function(options, cb){
 	// Step 2 - optional - only for secure networks
 	console.log("[ibc-js] Commence registering users: #", options.network.users.length)
 	if(options.network.users){
-		options.network.users = filter_users(options.network.users);				//only use the appropriate IDs
+		//options.network.users = filter_users(options.network.users);				//only use the appropriate IDs
 
 		var arr = [];
 		for(var i in chaincode.details.peers){
