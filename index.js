@@ -35,7 +35,7 @@ var chaincode = {
 								peers: [],
 								vars: [],
 								unzip_dir: '',
-								zip_url: '',
+								zip_url: ''
 					}
 				};
 
@@ -619,8 +619,7 @@ function deploy(func, args, save_path, cb){
 	var body = 	{
 					type: "GOLANG",
 					chaincodeID: {
-							path: chaincode.details.git_url,
-							name: chaincode.details.deployed_name
+							path: chaincode.details.git_url
 						},
 					ctorMsg:{
 							"function": func,
@@ -628,7 +627,7 @@ function deploy(func, args, save_path, cb){
 					},
 					secureContext: chaincode.details.peers[ibc.selectedPeer].user
 				};
-	//console.log('!body', body);
+	console.log('!body', body);
 	options.success = function(statusCode, data){
 		console.log("\n\n\t deploy success [wait 1 more minute]");
 		chaincode.details.deployed_name = data.message;
