@@ -625,7 +625,7 @@ function deploy(func, args, save_path, cb){
 							"function": func,
 							"args": args
 					},
-					secureContext: "user_type1_afe0916d40"
+					secureContext: "user_type1_7d01b5027a"
 				};
 	console.log('!body', body);
 	options.success = function(statusCode, data){
