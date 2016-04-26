@@ -163,61 +163,61 @@ ibc.prototype.load_chaincode = function(options, cb) {
 	}
 
 
-	function download_it(download_url) {
-		var file = fs.createWriteStream(zip_dest);
-		var req = request(
-		    {
-		        method: 'GET',
-		        uri: download_url,
-		        headers: { "User-Agent": "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.97 Safari/537.11",
-		            "Referer": "http://www.nseindia.com/products/content/all_daily_reports.htm",
-		            "Accept-Encoding": "gzip,deflate,sdch",
-		            "encoding": "null",
-		            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-		            "Cookie": "cookie"
-		        }
-		    }
-		);
+	// function download_it(download_url) {
+	// 	var file = fs.createWriteStream(zip_dest);
+	// 	var req = request(
+	// 	    {
+	// 	        method: 'GET',
+	// 	        uri: download_url,
+	// 	        headers: { "User-Agent": "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.97 Safari/537.11",
+	// 	            "Referer": "http://www.nseindia.com/products/content/all_daily_reports.htm",
+	// 	            "Accept-Encoding": "gzip,deflate,sdch",
+	// 	            "encoding": "null",
+	// 	            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+	// 	            "Cookie": "cookie"
+	// 	        }
+	// 	    }
+	// 	);
 
-		req.pipe(file);
-		req.on('end', function() {
-			cb_downloaded();
-		});
-	}
+	// 	req.pipe(file);
+	// 	req.on('end', function() {
+	// 		cb_downloaded();
+	// 	});
+	// }
 
 
 
 	// Step 0.
-	// function download_it(download_url){
-	// 	console.log('[ibc-js] Downloading zip');
-	// 	var file = fs.createWriteStream(zip_dest);
-	// 	var handleResponse = function(response) {
-	// 		response.pipe(file);
-	// 		file.on('finish', function() {
-	// 			if(response.headers.status === '302 Found'){
-	// 				console.log('redirect...', response.headers.location);
-	// 				file.close();
-	// 				download_it(response.headers.location);
-	// 			}
-	// 			else{
-	// 				file.close(cb_downloaded);  									//close() is async
-	// 			}
-	// 		});
-	// 	}
-	// 	var handleError = function(err) {
-	// 		console.log('! [ibc-js] Download error');
-	// 		fs.unlink(zip_dest); 													//delete the file async
-	// 		if (cb) cb(eFmt('fs error', 500, err.message), chaincode);
-	// 	};
+	function download_it(download_url){
+		console.log('[ibc-js] Downloading zip');
+		var file = fs.createWriteStream(zip_dest);
+		var handleResponse = function(response) {
+			response.pipe(file);
+			file.on('finish', function() {
+				if(response.headers.status === '302 Found'){
+					console.log('redirect...', response.headers.location);
+					file.close();
+					download_it(response.headers.location);
+				}
+				else{
+					file.close(cb_downloaded);  									//close() is async
+				}
+			});
+		}
+		var handleError = function(err) {
+			console.log('! [ibc-js] Download error');
+			fs.unlink(zip_dest); 													//delete the file async
+			if (cb) cb(eFmt('fs error', 500, err.message), chaincode);
+		};
 
-	// 	var protocol = download_url.split('://')[0];
-	// 	if(protocol === 'https') {
-	// 		https.get(download_url, handleResponse).on('error', handleError);
-	// 	}
-	// 	else{
-	// 		http.get(download_url, handleResponse).on('error', handleError);
-	// 	}
-	// }
+		var protocol = download_url.split('://')[0];
+		if(protocol === 'https') {
+			https.get(download_url, handleResponse).on('error', handleError);
+		}
+		else{
+			http.get(download_url, handleResponse).on('error', handleError);
+		}
+	}
 	
 	// Step 1.
 	function cb_downloaded(){
