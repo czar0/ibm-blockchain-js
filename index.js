@@ -127,14 +127,7 @@ ibc.prototype.load_chaincode = function(options, cb) {
 	chaincode.details.zip_url = options.zip_url;
 	chaincode.details.unzip_dir = options.unzip_dir;
 	chaincode.details.git_url = options.git_url;
-
-	console.log("zip_dest: "+zip_dest);
-	console.log("unzip_dest: "+unzip_dest);
-	console.log("unzip_cc_dest: "+unzip_cc_dest);
-	console.log("chaincode.details.zip_url: "+chaincode.details.zip_url);
-	console.log("chaincode.details.unzip_dir: "+chaincode.details.unzip_dir);
-	console.log("chaincode.details.git_url: "+chaincode.details.git_url);
-
+	var cc_dest = path.join(tempDirectory,  '/chaincode.go');
 
 	if(!options.deployed_name || options.deployed_name == ''){							//lets clear and re-download
 		//ibc.prototype.clear(cb_ready);
