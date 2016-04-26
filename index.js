@@ -128,6 +128,7 @@ ibc.prototype.load_chaincode = function(options, cb) {
 	chaincode.details.unzip_dir = options.unzip_dir;
 	chaincode.details.git_url = options.git_url;
 	var cc_dest = path.join(tempDirectory,  '/chaincode.go');
+	var cc_file = null;
 
 	if(!options.deployed_name || options.deployed_name == ''){							//lets clear and re-download
 		//ibc.prototype.clear(cb_ready);
@@ -166,6 +167,7 @@ ibc.prototype.load_chaincode = function(options, cb) {
 		var file = fs.createWriteStream(cc_dest);
 		var handleResponse = function(response) {
 			response.pipe(file);
+			cc_file = response;
 			file.on('finish', function() {
 				if(response.headers.status === '302 Found'){
 					console.log('redirect...', response.headers.location);
@@ -174,7 +176,8 @@ ibc.prototype.load_chaincode = function(options, cb) {
 				}
 				else{
 					file.close();  									//close() is async
-					fs.readdir(tempDirectory, cb_got_names);
+					//fs.readdir(tempDirectory, cb_got_names);
+					cb_read_go_file(null,cc_file);
 				}
 			});
 		}
