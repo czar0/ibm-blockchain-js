@@ -146,9 +146,10 @@ ibc.prototype.load_chaincode = function(options, cb) {
 	
 	// check if we already have the chaincode in the local filesystem, else download it
 	function cb_ready(){
-		// try{fs.mkdirSync(tempDirectory);}
-		// catch(e){ }
-		fs.access(chaincode_dir, cb_file_exists);										//check if files exist yet
+		 try{fs.mkdirSync(tempDirectory);}
+		 catch(e){ }
+		// fs.access(chaincode_dir, cb_file_exists);
+		fs.access(unzip_cc_dest, cb_file_exists);										//check if files exist yet
 		function cb_file_exists(e){
 			if(e != null){
 				download_it(options.zip_url);											//nope, go download it
@@ -212,7 +213,8 @@ ibc.prototype.load_chaincode = function(options, cb) {
 				if(obj[i].indexOf('.go') >= 0){										//look for GoLang files
 					if(keep_looking){
 						foundGo = true;
-						fs.readFile(path.join(chaincode_dir, obj[i]), 'utf8', cb_read_go_file);
+						// fs.readFile(path.join(chaincode_dir, obj[i]), 'utf8', cb_read_go_file);
+						fs.readFile(path.join(unzip_cc_dest, obj[i]), 'utf8', cb_read_go_file);
 					}
 				}
 			}
@@ -616,7 +618,7 @@ function deploy(func, args, save_path, cb){
 	var body = 	{
 					type: "GOLANG",
 					chaincodeID: {
-							path: chaincode_dir
+							path: chaincode.details.git_url
 						},
 					ctorMsg:{
 							"function": func,
