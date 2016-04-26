@@ -616,7 +616,7 @@ function deploy(func, args, save_path, cb){
 	var body = 	{
 					type: "GOLANG",
 					chaincodeID: {
-							path: "/home/vcap/tmp"
+							path: chaincode_dir
 						},
 					ctorMsg:{
 							"function": func,
