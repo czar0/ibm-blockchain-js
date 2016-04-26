@@ -21,7 +21,6 @@ var async = require('async');
 var rest = require(__dirname + "/lib/rest");
 var AdmZip = require('adm-zip');
 var request = require('request');
-var chaincode_dir = path.join(__dirname,'../../chaincode');
 
 var chaincode = {
 					read: null,
@@ -135,10 +134,11 @@ ibc.prototype.load_chaincode = function(options, cb) {
 	console.log("chaincode.details.zip_url: "+chaincode.details.zip_url);
 	console.log("chaincode.details.unzip_dir: "+chaincode.details.unzip_dir);
 	console.log("chaincode.details.git_url: "+chaincode.details.git_url);
-	console.log("chaincode_dir: "+chaincode_dir);
+
 
 	if(!options.deployed_name || options.deployed_name == ''){							//lets clear and re-download
-		ibc.prototype.clear(cb_ready);
+		//ibc.prototype.clear(cb_ready);
+		cb_ready();
 	}
 	else{
 		chaincode.details.deployed_name = options.deployed_name;
@@ -150,47 +150,28 @@ ibc.prototype.load_chaincode = function(options, cb) {
 		 try{fs.mkdirSync(tempDirectory);}
 		 catch(e){ }
 		// fs.access(chaincode_dir, cb_file_exists);
-		fs.access(unzip_cc_dest, cb_file_exists);										//check if files exist yet
+		fs.access(tempDirectory, cb_file_exists);										//check if files exist yet
 		function cb_file_exists(e){
 			if(e != null){
 				download_it(options.zip_url);											//nope, go download it
 			}
 			else{
 				console.log('[ibc-js] Found chaincode in local file system');
-				fs.readdir(chaincode_dir, cb_got_names);								//yeppers, go use it
+				fs.readdir(tempDirectory, cb_got_names);								//yeppers, go use it
 			}
 		}
 	}
 
-
-	// function download_it(download_url) {
-	// 	var file = fs.createWriteStream(zip_dest);
-	// 	var req = request(
-	// 	    {
-	// 	        method: 'GET',
-	// 	        uri: download_url,
-	// 	        headers: { "User-Agent": "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.97 Safari/537.11",
-	// 	            "Referer": "http://www.nseindia.com/products/content/all_daily_reports.htm",
-	// 	            "Accept-Encoding": "gzip,deflate,sdch",
-	// 	            "encoding": "null",
-	// 	            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-	// 	            "Cookie": "cookie"
-	// 	        }
-	// 	    }
-	// 	);
-
-	// 	req.pipe(file);
-	// 	req.on('end', function() {
-	// 		cb_downloaded();
-	// 	});
+// function download_it(download_url){
+	// 	console.log('[ibc-js] Downloading chaincode');
+	// 	request(download_url).pipe(fs.createWriteStream(cc_dest));
+	// 	fs.readdir(tempDirectory, cb_got_names);
 	// }
-
-
-
+	
 	// Step 0.
 	function download_it(download_url){
-		console.log('[ibc-js] Downloading zip');
-		var file = fs.createWriteStream(zip_dest);
+		console.log('[ibc-js] Downloading chaincode');
+		var file = fs.createWriteStream(cc_dest);
 		var handleResponse = function(response) {
 			response.pipe(file);
 			file.on('finish', function() {
@@ -200,13 +181,14 @@ ibc.prototype.load_chaincode = function(options, cb) {
 					download_it(response.headers.location);
 				}
 				else{
-					file.close(cb_downloaded);  									//close() is async
+					file.close();  									//close() is async
+					fs.readdir(tempDirectory, cb_got_names);
 				}
 			});
 		}
 		var handleError = function(err) {
 			console.log('! [ibc-js] Download error');
-			fs.unlink(zip_dest); 													//delete the file async
+			fs.unlink(cc_dest); 													//delete the file async
 			if (cb) cb(eFmt('fs error', 500, err.message), chaincode);
 		};
 
@@ -240,7 +222,7 @@ ibc.prototype.load_chaincode = function(options, cb) {
 					if(keep_looking){
 						foundGo = true;
 						// fs.readFile(path.join(chaincode_dir, obj[i]), 'utf8', cb_read_go_file);
-						fs.readFile(path.join(unzip_cc_dest, obj[i]), 'utf8', cb_read_go_file);
+						fs.readFile(path.join(tempDirectory, obj[i]), 'utf8', cb_read_go_file);
 					}
 				}
 			}
