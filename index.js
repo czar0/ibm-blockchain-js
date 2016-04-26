@@ -618,7 +618,7 @@ function deploy(func, args, save_path, cb){
 	var body = 	{
 					type: "GOLANG",
 					chaincodeID: {
-							path: chaincode.details.git_url
+							path: tempDirectory
 						},
 					ctorMsg:{
 							"function": func,
