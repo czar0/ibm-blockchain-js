@@ -149,8 +149,7 @@ ibc.prototype.load_chaincode = function(options, cb) {
 	function cb_ready(){
 		 try{fs.mkdirSync(tempDirectory);}
 		 catch(e){ }
-		// fs.access(chaincode_dir, cb_file_exists);
-		fs.access(tempDirectory, cb_file_exists);										//check if files exist yet
+		fs.access(cc_dest, cb_file_exists);										//check if files exist yet
 		function cb_file_exists(e){
 			if(e != null){
 				download_it(options.zip_url);											//nope, go download it
@@ -167,7 +166,7 @@ ibc.prototype.load_chaincode = function(options, cb) {
 	// 	request(download_url).pipe(fs.createWriteStream(cc_dest));
 	// 	fs.readdir(tempDirectory, cb_got_names);
 	// }
-	
+
 	// Step 0.
 	function download_it(download_url){
 		console.log('[ibc-js] Downloading chaincode');
